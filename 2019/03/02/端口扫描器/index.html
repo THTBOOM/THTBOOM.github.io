@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="TCP&amp;amp;UDP端口扫描器用Python写的端口扫描器，主要功能为对给定的IP地址进行端口扫描。TCP主要使用socket库，UDP使用nmap库，参考书籍：《python绝技：运用python成为顶尖黑客》 源码：12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于Python的简易端口扫描器">
+<meta property="og:url" content="https://thtboom.github.io/2019/03/02/端口扫描器/index.html">
+<meta property="og:site_name" content="T&#39;Sec">
+<meta property="og:description" content="TCP&amp;amp;UDP端口扫描器用Python写的端口扫描器，主要功能为对给定的IP地址进行端口扫描。TCP主要使用socket库，UDP使用nmap库，参考书籍：《python绝技：运用python成为顶尖黑客》 源码：12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-03-02T13:24:45.600Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="基于Python的简易端口扫描器">
+<meta name="twitter:description" content="TCP&amp;amp;UDP端口扫描器用Python写的端口扫描器，主要功能为对给定的IP地址进行端口扫描。TCP主要使用socket库，UDP使用nmap库，参考书籍：《python绝技：运用python成为顶尖黑客》 源码：12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://thtboom.github.io/2019/03/02/端口扫描器/">
+
+
+
+
+
+  <title>基于Python的简易端口扫描器 | T'Sec</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">T'Sec</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://thtboom.github.io/2019/03/02/端口扫描器/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="TBOOM">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="T'Sec">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">基于Python的简易端口扫描器</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-02T21:13:00+08:00">
+                2019-03-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="TCP-amp-UDP端口扫描器"><a href="#TCP-amp-UDP端口扫描器" class="headerlink" title="TCP&amp;UDP端口扫描器"></a>TCP&amp;UDP端口扫描器</h1><p>用Python写的端口扫描器，主要功能为对给定的IP地址进行端口扫描。TCP主要使用socket库，UDP使用nmap库，参考书籍：《python绝技：运用python成为顶尖黑客》</p>
+<p>源码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br></pre></td><td class="code"><pre><span class="line">import optparse;</span><br><span class="line">import nmap</span><br><span class="line">from socket import *;</span><br><span class="line">from threading import *;</span><br><span class="line">screenLock = Semaphore(value=4) #处理多线程问题，使用screenLock.acquire()执行加锁</span><br><span class="line">&apos;&apos;&apos;</span><br><span class="line">使用socket进行端口扫描，通过socket(AF_INET,SOCK_STREAM)指定基于IPv4网络，tcp连接，</span><br><span class="line">使用connect去进行连接，成功则为端口开放，失败则为端口关闭。</span><br><span class="line">&apos;&apos;&apos;</span><br><span class="line">def tconnScan(tHost,tPort):</span><br><span class="line">    try:</span><br><span class="line">        connSkt = socket(AF_INET,SOCK_STREAM)</span><br><span class="line">        connSkt.connect((tHost,tPort))</span><br><span class="line">        screenLock.acquire()</span><br><span class="line">        print(&quot;[+]%d/tcp open&quot;% tPort)</span><br><span class="line">        screenLock.release()</span><br><span class="line">        connSkt.close()</span><br><span class="line">    except:</span><br><span class="line">        screenLock.acquire()</span><br><span class="line">        print(&quot;[-]%d/tcp closed&quot;% tPort)</span><br><span class="line">        screenLock.release()</span><br><span class="line">    finally:</span><br><span class="line">        exit(0)</span><br><span class="line"></span><br><span class="line">def tportScan(tHost,tPorts):</span><br><span class="line">    try:</span><br><span class="line">        tIP = gethostbyname(tHost)</span><br><span class="line">    except:</span><br><span class="line">        print(&quot;[-] Cannot resolve &apos;%s&apos;: Unknown host&quot;% tHost)</span><br><span class="line">        return</span><br><span class="line">    try:</span><br><span class="line">        tName = gethostbyaddr(tIP)</span><br><span class="line">        print(&quot;\n[+] Scan Result for:&quot; + tName[0])</span><br><span class="line">    except:</span><br><span class="line">        print(&quot;\n[+] Scan Result for:&quot; + tIP)</span><br><span class="line">    setdefaulttimeout(1)</span><br><span class="line">    for tPort in tPorts:</span><br><span class="line">        t = Thread(target=tconnScan,args=(tHost,int(tPort)))</span><br><span class="line">        t.start()</span><br><span class="line">&apos;&apos;&apos;</span><br><span class="line">调用nmap库做udp扫描</span><br><span class="line">&apos;&apos;&apos;</span><br><span class="line">def udpScan(tHost,tPort):</span><br><span class="line">    nm = nmap.PortScanner()</span><br><span class="line">    data=nm.scan(tHost,tPort,&apos;-sU&apos;);</span><br><span class="line">    state = data[&apos;scan&apos;][tHost][&apos;udp&apos;][int(tPort)][&apos;state&apos;]</span><br><span class="line">    if(state == &quot;closed&quot;):</span><br><span class="line">        print(&quot;[-]%s/udp %s&quot;% (tPort,state))</span><br><span class="line">    else:</span><br><span class="line">        print(&quot;[+]%s/udp %s&quot;% (tPort,state))</span><br><span class="line">&apos;&apos;&apos;</span><br><span class="line">用optparse模块调用其方法来解析扫描命令，解析扫描的主机名host和扫描端口port</span><br><span class="line">&apos;&apos;&apos;</span><br><span class="line">def main() :</span><br><span class="line">    parser = optparse.OptionParser(&apos;usage %prog -H&apos;+&apos;&lt;target host&gt; -p &lt;target port&gt; -t &lt;target proto&gt;&apos;)</span><br><span class="line">    parser.add_option(&apos;-H&apos;,dest=&apos;tHost&apos;,type=&apos;string&apos;,help=&apos;specify target host&apos;)</span><br><span class="line">    parser.add_option(&apos;-p&apos;,dest=&apos;tPort&apos;,type=&apos;string&apos;,help=&apos;specify target port&apos;)</span><br><span class="line">    parser.add_option(&apos;-t&apos;,dest=&apos;tProto&apos;,type=&apos;string&apos;,help=&apos;specify target tproto&apos;)</span><br><span class="line">    (options,args) = parser.parse_args()</span><br><span class="line">    tHost = options.tHost</span><br><span class="line">    if(options.tProto == &quot;t&quot;):</span><br><span class="line">        if(options.tPort == &quot;dft&quot;):</span><br><span class="line">            tPorts = [80,8080,3128,8081,9080,1080,21,23,443,69,22,25,110,7001,9090,3389,1521,1158,2100,1433]</span><br><span class="line">        else:</span><br><span class="line">            tPorts = str(options.tPort).split(&apos;,&apos;)</span><br><span class="line">        if (tHost == None) :</span><br><span class="line">            print(parser.usage)</span><br><span class="line">            exit(0)</span><br><span class="line">        tportScan(tHost,tPorts)</span><br><span class="line">    elif (options.tProto == &quot;u&quot;):</span><br><span class="line">        if(options.tPort == &quot;dft&quot;):</span><br><span class="line">            tPorts = [&apos;31&apos;,&apos;41&apos;,&apos;69&apos;,&apos;110&apos;,&apos;137&apos;,&apos;138&apos;,&apos;161&apos;,&apos;666&apos;,&apos;999&apos;,&apos;1027&apos;,&apos;1042&apos;,&apos;4000&apos;,&apos;8099&apos;,&apos;8255&apos;]</span><br><span class="line">        else:</span><br><span class="line">            tPorts = str(options.tPort).split(&apos;,&apos;)</span><br><span class="line">        if (tHost == None) :</span><br><span class="line">            print(parser.usage)</span><br><span class="line">            exit(0)</span><br><span class="line">        print(&quot;\n[+] Scan Result for:&quot; + tHost)</span><br><span class="line">        for tPort in tPorts:</span><br><span class="line">            udpScan(tHost,tPort)</span><br><span class="line">    else:</span><br><span class="line">        print(&quot;please input -t u(udp) or t(tcp)&quot;)</span><br><span class="line">        exit(0)</span><br><span class="line">if __name__ == &quot;__main__&quot;:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure></p>
+<p>个人编程能力不强。为了完成课设的要求，做成这种半成品。有些地方可以做一些修改，使之更加友好，比如UDP扫描只允许IP地址查询，可以套用TCP扫描的例子做修改，还有UDP扫描未使用多线程，还有很多很多，都可以根据自己使用的实际情况进行修改。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/03/02/PowerShell劫持Windows快捷键/" rel="next" title="PowerShell劫持Windows快捷键">
+                <i class="fa fa-chevron-left"></i> PowerShell劫持Windows快捷键
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">TBOOM</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#TCP-amp-UDP端口扫描器"><span class="nav-number">1.</span> <span class="nav-text">TCP&amp;UDP端口扫描器</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">TBOOM</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">TBOOM</a> 强力驱动</div>
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
